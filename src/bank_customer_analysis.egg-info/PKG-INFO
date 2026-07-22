@@ -1,3 +1,16 @@
+Metadata-Version: 2.4
+Name: bank-customer-analysis
+Version: 0.1.0
+Summary: Análisis de clientes bancarios y campañas de contacto
+Requires-Python: >=3.10
+Description-Content-Type: text/markdown
+Requires-Dist: pandas>=2.0
+Requires-Dist: jupyter>=1.0
+Requires-Dist: matplotlib>=3.7
+Requires-Dist: seaborn>=0.12
+Provides-Extra: dev
+Requires-Dist: pytest>=7.0; extra == "dev"
+
 # Análisis de clientes bancarios y campañas de contacto
 
 Proyecto de análisis exploratorio y preparación de datos para entender qué perfiles de clientes tienen mayor probabilidad de responder a una campaña bancaria. Está pensado como una pieza de portafolio de análisis de datos: parte de un archivo CSV crudo, estandariza sus campos y explora variables demográficas, financieras, de crédito y de contacto.
@@ -70,19 +83,19 @@ git clone <URL-DEL-REPOSITORIO>
 cd banckCustomer
 python -m venv .venv
 source .venv/bin/activate  # En Windows: .venv\Scripts\activate
-python -m pip install -e ".[dev]"
+pip install -r requirements.txt
 ```
 
-Con el entorno virtual activado, inicia Jupyter desde la raíz del repositorio:
+Abre los notebooks desde la raíz del repositorio para reproducir la exploración:
 
 ```bash
 jupyter notebook
 ```
 
-Para ejecutar las pruebas.
+Para ejecutar las pruebas, asegúrate de que la raíz del proyecto esté en la ruta de módulos:
 
 ```bash
-python -m pytest -q
+PYTHONPATH=. pytest -q
 ```
 
 ## Próximos pasos
@@ -96,12 +109,3 @@ python -m pytest -q
 ## Tecnologías
 
 Python, pandas, Jupyter, Matplotlib, Seaborn y pytest.
-
-## Estructura del paquete
-
-El código fuente se distribuye como el paquete `bank_customer`, ubicado en
-`src/bank_customer`. Tras instalar el proyecto en modo editable, puede
-importarse desde scripts, notebooks y pruebas:
-
-```python
-from bank_customer.utils.paths import get_path_raw

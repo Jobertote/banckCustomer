@@ -1,7 +1,7 @@
-from src.utils.paths import get_path_raw
-from src.extract.extract import extract
-from src.transform.clean_df import clean_heads, keep_columns
-from src.load.load import generate_clean_csv
+from bank_customer.utils.paths import get_path_raw
+from bank_customer.extract.extract import extract
+from bank_customer.transform.clean_df import clean_heads, keep_columns
+from bank_customer.load.load import generate_clean_csv
 
 
 def run_pipeline():

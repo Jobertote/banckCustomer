@@ -1,7 +1,7 @@
 import os
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parents[2]
+ROOT = Path(__file__).resolve().parents[3]
 
 def get_path_processed(file_name) -> Path:
     return ROOT / "data" / "processed" / file_name

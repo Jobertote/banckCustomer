@@ -1,8 +1,8 @@
 import pandas as pd
-from src.extract.extract import extract
-from src.transform.clean_df import clean_heads
-from src.transform.transform import filter_by_column_over_under, filter_by_column_equal, get_keep_columns
-from src.utils.paths import get_path_raw
+from bank_customer.extract.extract import extract
+from bank_customer.transform.clean_df import clean_heads
+from bank_customer.transform.transform import filter_by_column_over_under, filter_by_column_equal, get_keep_columns
+from bank_customer.utils.paths import get_path_raw
 
 def test_keep_columns():
     df = clean_heads(extract(get_path_raw('dataset.csv')))
