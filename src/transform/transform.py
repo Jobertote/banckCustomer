@@ -28,3 +28,9 @@ def filter_by_column_over_under(df : pd.DataFrame, column_name : str, over : boo
 
 def filter_by_column_equal(df : pd.DataFrame, column_name : str, value : number) -> pd.DataFrame:
     return df[df[column_name] == value]
+
+def get_principal_columns(df: pd.DataFrame) -> pd.DataFrame:
+    return df[KEEP_COLUMNS]
+
+def filter_by_between_int(df : pd.DataFrame, column_name : str, value_ini : int, value_end : int) -> pd.DataFrame:
+    return df[df[column_name].between(value_ini, value_end)]
