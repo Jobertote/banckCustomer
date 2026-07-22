@@ -1,1 +1,98 @@
-Prueba
+# Análisis de clientes bancarios y campañas de contacto
+
+Proyecto de análisis exploratorio y preparación de datos para entender qué perfiles de clientes tienen mayor probabilidad de responder a una campaña bancaria. Está pensado como una pieza de portafolio de análisis de datos: parte de un archivo CSV crudo, estandariza sus campos y explora variables demográficas, financieras, de crédito y de contacto.
+
+## Objetivo de negocio
+
+**¿Cómo puede el banco priorizar los clientes y canales de contacto con mayor probabilidad de conversión para mejorar la efectividad de una campaña, sin aumentar el volumen de llamadas?**
+
+La respuesta se aborda comparando la tasa de conversión de `Class` entre segmentos de cliente y condiciones de contacto. En este dataset, `Class = 2` se usa como conversión y `Class = 1` como no conversión; esta equivalencia debe confirmarse con el diccionario de datos antes de tomar decisiones operativas.
+
+## Hallazgos iniciales
+
+Sobre los 45,211 registros disponibles, 5,289 pertenecen a la clase 2, una tasa de conversión de **11.7 %**. Algunos patrones que orientan la pregunta de negocio son:
+
+| Segmento o variable | Tasa de conversión (`Class = 2`) |
+| --- | ---: |
+| Contacto por celular | 14.9 % |
+| Contacto sin canal identificado | 4.1 % |
+| Resultado exitoso de campaña previa (`V16`) | 64.7 % |
+| Sin préstamo hipotecario | 16.7 % |
+| Con préstamo hipotecario | 7.7 % |
+| Clientes de 60 años o más | 33.6 % |
+| Clientes de 40 a 49 años | 9.1 % |
+
+Estos resultados son descriptivos, no causales. Para priorizar una campaña futura conviene usar únicamente variables disponibles **antes** del contacto; por ejemplo, no se debe usar la duración de la llamada si se confirma que `V12` corresponde a esa variable.
+
+## Dataset
+
+El archivo de origen está en `data/raw/dataset.csv` y contiene 45,211 filas, 17 columnas, sin valores nulos ni registros duplicados exactos. Incluye, entre otras, las siguientes variables:
+
+- Perfil: edad, tipo de empleo, estado civil y nivel educativo.
+- Situación financiera: balance anual promedio, mora de crédito, préstamo hipotecario y préstamo personal.
+- Gestión de campaña: tipo de comunicación y día del último contacto.
+- Resultado: `Class`.
+
+Algunas columnas de campaña conservan nombres genéricos (`V11` a `V16`). Por la estructura de los datos, requieren documentación o renombrado antes de un análisis final para evitar interpretaciones erróneas.
+
+## Estructura del proyecto
+
+```text
+.
+├── data/raw/dataset.csv                 # Datos de origen
+├── notebooks/
+│   ├── 01_data_cleaning.ipynb            # Carga y estandarización de encabezados
+│   └── 02_analysis_financial_credit.ipynb # Exploración financiera y de crédito
+├── src/
+│   ├── extract/extract.py                # Lectura del CSV
+│   ├── transform/clean_df.py             # Limpieza de encabezados
+│   ├── transform/transform.py            # Selección y filtros de datos
+│   └── utils/paths.py                    # Rutas del proyecto
+├── tests/                                # Pruebas unitarias
+├── main.py
+└── requirements.txt
+```
+
+## Proceso analítico
+
+1. Cargar el CSV desde `data/raw`.
+2. Estandarizar los encabezados: minúsculas y guiones bajos.
+3. Seleccionar variables de perfil financiero y crédito.
+4. Calcular estadísticas descriptivas y distribuciones.
+5. Comparar tasas de conversión por segmento para responder la pregunta de negocio.
+
+## Instalación y uso
+
+Requiere Python 3.10 o superior.
+
+```bash
+git clone <URL-DEL-REPOSITORIO>
+cd banckCustomer
+python -m venv .venv
+source .venv/bin/activate  # En Windows: .venv\Scripts\activate
+pip install -r requirements.txt
+```
+
+Abre los notebooks desde la raíz del repositorio para reproducir la exploración:
+
+```bash
+jupyter notebook
+```
+
+Para ejecutar las pruebas, asegúrate de que la raíz del proyecto esté en la ruta de módulos:
+
+```bash
+PYTHONPATH=. pytest -q
+```
+
+## Próximos pasos
+
+- Documentar y renombrar `V11`–`V16` con el diccionario de datos.
+- Confirmar formalmente el significado de las clases 1 y 2.
+- Crear una tabla de priorización con tamaño de segmento, tasa de conversión e impacto esperado.
+- Entrenar y evaluar un modelo de propensión usando solo información previa al contacto.
+- Añadir visualizaciones y exportar un dataset procesado reproducible.
+
+## Tecnologías
+
+Python, pandas, Jupyter, Matplotlib, Seaborn y pytest.
