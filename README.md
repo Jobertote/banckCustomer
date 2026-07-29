@@ -85,6 +85,12 @@ Para ejecutar las pruebas.
 python -m pytest -q
 ```
 
+## Ejecutar el pipeline
+
+con el entorno virtual activado y el proyecto instalado, ejecuta:
+```bash
+python main.py
+
 ## Próximos pasos
 
 - Documentar y renombrar `V11`–`V16` con el diccionario de datos.
