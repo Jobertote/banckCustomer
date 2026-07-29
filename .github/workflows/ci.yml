@@ -8,7 +8,7 @@ permissions:
   contents: read
 
 jobs:
-    quality:
+  quality:
     runs-on: ubuntu-latest
 
     steps:
@@ -21,10 +21,13 @@ jobs:
           python-version: "3.12"
 
       - name: Install dependencies
-        run: python -m pipi install -e ".[dev}"
+        run: python -m pip install -e ".[dev]"
 
       - name: Check formatting
         run: python -m ruff format --check .
+
+      - name: Run linter
+        run: python -m ruff check .
 
       - name: Run tests
         run: python -m pytest -q
