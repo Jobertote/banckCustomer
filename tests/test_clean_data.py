@@ -21,11 +21,24 @@ def test_extract_data():
 
 
 def test_clean_columns():
+    expected_columns = {
+        "month",
+        "duration",
+        "campaign",
+        "pdays",
+        "previous",
+        "poutcome",
+        "subscription",
+    }
+
     df = extract(get_path_raw("dataset.csv"))
     original_columns = df.columns.copy()
 
     cleaned_df = clean_heads(df)
 
+    assert expected_columns.issubset(cleaned_df.columns)
+    assert "v11" not in cleaned_df.columns
+    assert "class" not in cleaned_df.columns
     assert isinstance(cleaned_df, pd.DataFrame)
     assert cleaned_df is not df
     assert df.columns.equals(original_columns)

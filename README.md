@@ -6,23 +6,23 @@ Proyecto de análisis exploratorio y preparación de datos para entender qué pe
 
 **¿Cómo puede el banco priorizar los clientes y canales de contacto con mayor probabilidad de conversión para mejorar la efectividad de una campaña, sin aumentar el volumen de llamadas?**
 
-La respuesta se aborda comparando la tasa de conversión de `Class` entre segmentos de cliente y condiciones de contacto. En este dataset, `Class = 2` se usa como conversión y `Class = 1` como no conversión; esta equivalencia debe confirmarse con el diccionario de datos antes de tomar decisiones operativas.
+La respuesta se aborda comparando la tasa de conversión de `subscription` entre segmentos de cliente y condiciones de contacto. En este dataset, `subscription = 2` se usa como conversión y `subscription = 1` como no conversión; esta equivalencia debe confirmarse con el diccionario de datos antes de tomar decisiones operativas.
 
 ## Hallazgos iniciales
 
-Sobre los 45,211 registros disponibles, 5,289 pertenecen a la clase 2, una tasa de conversión de **11.7 %**. Algunos patrones que orientan la pregunta de negocio son:
+Sobre los 45,211 registros disponibles, 5,289 clientes tienen `subscription = 2`, una tasa de conversión de **11.7 %**. Algunos patrones que orientan la pregunta de negocio son:
 
-| Segmento o variable | Tasa de conversión (`Class = 2`) |
+| Segmento o variable | Tasa de conversión (`subscription = 2`) |
 | --- | ---: |
 | Contacto por celular | 14.9 % |
 | Contacto sin canal identificado | 4.1 % |
-| Resultado exitoso de campaña previa (`V16`) | 64.7 % |
+| Resultado exitoso de campaña previa (`poutcome = success`) | 64.7 % |
 | Sin préstamo hipotecario | 16.7 % |
 | Con préstamo hipotecario | 7.7 % |
 | Clientes de 60 años o más | 33.6 % |
 | Clientes de 40 a 49 años | 9.1 % |
 
-Estos resultados son descriptivos, no causales. Para priorizar una campaña futura conviene usar únicamente variables disponibles **antes** del contacto; por ejemplo, no se debe usar la duración de la llamada si se confirma que `V12` corresponde a esa variable.
+Estos resultados son descriptivos, no causales. Para priorizar una campaña futura conviene usar únicamente variables disponibles **antes** del contacto. Por ello, `duration` se excluye del análisis, ya que solo se conoce al terminar la llamada.
 
 ## Dataset
 
@@ -31,18 +31,22 @@ El archivo de origen está en `data/raw/dataset.csv` y contiene 45,211 filas, 17
 - Perfil: edad, tipo de empleo, estado civil y nivel educativo.
 - Situación financiera: balance anual promedio, mora de crédito, préstamo hipotecario y préstamo personal.
 - Gestión de campaña: tipo de comunicación y día del último contacto.
-- Resultado: `Class`.
+- Resultado: `Class` en el archivo crudo, renombrado como `subscription` en el dataset procesado.
 
-Algunas columnas de campaña conservan nombres genéricos (`V11` a `V16`). Por la estructura de los datos, requieren documentación o renombrado antes de un análisis final para evitar interpretaciones erróneas.
+Consulta el [diccionario de datos](docs/data_dictionary.md) para la fuente, licencia, mapeo de columnas y restricciones analíticas.
+
+El archivo crudo conserva los nombres originales `V11`–`V16` y `Class`. Durante el pipeline, estos se renombran en el dataset procesado como `month`, `duration`, `campaign`, `pdays`, `previous`, `poutcome` y `subscription`.
 
 ## Estructura del proyecto
 
 ```text
 .
 ├── data/raw/dataset.csv                 # Datos de origen
+├── docs/data_dictionary.md              # Diccionario de datos
 ├── notebooks/
 │   ├── 01_data_cleaning.ipynb            # Carga y estandarización de encabezados
 │   └── 02_analysis_financial_credit.ipynb # Exploración financiera y de crédito
+│   └── 03_stakeholder_questions.ipynb    # Exploración a pregunta de negocio
 ├── src/
 │   ├── extract/extract.py                # Lectura del CSV
 │   ├── transform/clean_df.py             # Limpieza de encabezados
@@ -90,11 +94,10 @@ python -m pytest -q
 con el entorno virtual activado y el proyecto instalado, ejecuta:
 ```bash
 python main.py
+```
 
 ## Próximos pasos
 
-- Documentar y renombrar `V11`–`V16` con el diccionario de datos.
-- Confirmar formalmente el significado de las clases 1 y 2.
 - Crear una tabla de priorización con tamaño de segmento, tasa de conversión e impacto esperado.
 - Entrenar y evaluar un modelo de propensión usando solo información previa al contacto.
 - Añadir visualizaciones y exportar un dataset procesado reproducible.
@@ -111,3 +114,4 @@ importarse desde scripts, notebooks y pruebas:
 
 ```python
 from bank_customer.utils.paths import get_path_raw
+```
